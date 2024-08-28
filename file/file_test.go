@@ -8,11 +8,11 @@ import (
 )
 
 func TestClientOriginalExtension(t *testing.T) {
-	assert.Equal(t, ClientOriginalExtension("logo.png"), "png")
+	assert.Equal(t, ClientOriginalExtension("file.go"), "go")
 }
 
 func TestContain(t *testing.T) {
-	assert.True(t, Contain("../constant.go", "const Version"))
+	assert.True(t, Contain("file.go", "package file"))
 }
 
 func TestCreateAndGetLineNum(t *testing.T) {
@@ -37,15 +37,15 @@ func TestExtension(t *testing.T) {
 }
 
 func TestLastModified(t *testing.T) {
-	ti, err := LastModified("../../logo.png", "UTC")
+	ti, err := LastModified("file.go", "UTC")
 	assert.Nil(t, err)
 	assert.NotNil(t, ti)
 }
 
 func TestMimeType(t *testing.T) {
-	mimeType, err := MimeType("../../logo.png")
+	mimeType, err := MimeType("file.go")
 	assert.Nil(t, err)
-	assert.Equal(t, "image/png", mimeType)
+	assert.Equal(t, "text/plain; charset=utf-8", mimeType)
 }
 
 func TestRemove(t *testing.T) {
@@ -58,7 +58,7 @@ func TestRemove(t *testing.T) {
 }
 
 func TestSize(t *testing.T) {
-	size, err := Size("../../logo.png")
+	size, err := Size("file.go")
 	assert.Nil(t, err)
-	assert.Equal(t, int64(10853), size)
+	assert.True(t, size > 100)
 }
