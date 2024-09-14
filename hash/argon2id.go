@@ -34,7 +34,7 @@ type Argon2id struct {
 }
 
 // NewArgon2id returns a new Argon2id hasher.
-func NewArgon2id() *Argon2id {
+func NewArgon2id() Hasher {
 	return &Argon2id{
 		format:  "$argon2id$v=%d$m=%d,t=%d,p=%d$%s$%s",
 		version: argon2.Version,

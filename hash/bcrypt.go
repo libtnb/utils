@@ -5,8 +5,7 @@ import (
 )
 
 var (
-	DefaultHasher = NewBcrypt()
-	BcryptRounds  = 12
+	BcryptRounds = 12
 )
 
 type Bcrypt struct {
@@ -14,7 +13,7 @@ type Bcrypt struct {
 }
 
 // NewBcrypt returns a new Bcrypt hasher.
-func NewBcrypt() *Bcrypt {
+func NewBcrypt() Hasher {
 	return &Bcrypt{
 		rounds: BcryptRounds,
 	}
