@@ -25,6 +25,14 @@ func Filter[V any](collection []V, predicate func(item V, index int) bool) []V {
 	return lo.Filter(collection, predicate)
 }
 
+// First gets the first element of collection.
+func First[V any](args []V) *V {
+	if len(args) > 0 {
+		return &args[0]
+	}
+	return nil
+}
+
 // GroupBy returns an object composed of keys generated from the results of running each element of collection through iteratee.
 func GroupBy[T any, U comparable](collection []T, iteratee func(item T) U) map[U][]T {
 	return lo.GroupBy(collection, iteratee)

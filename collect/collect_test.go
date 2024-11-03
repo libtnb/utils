@@ -40,6 +40,13 @@ func TestFilter(t *testing.T) {
 	assert.Equal(t, []int{2, 4}, even)
 }
 
+func TestFirst(t *testing.T) {
+	first := First([]int{1, 2, 3})
+	assert.Equal(t, 1, *first)
+	first2 := First([]int{})
+	assert.Nil(t, first2)
+}
+
 func TestGroupBy(t *testing.T) {
 	groups := GroupBy([]int{0, 1, 2, 3, 4, 5}, func(i int) int {
 		return i % 3
