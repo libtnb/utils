@@ -1,9 +1,34 @@
 package collect
 
 import (
+	"fmt"
+
 	"github.com/samber/lo"
+	"github.com/spf13/cast"
 	"golang.org/x/exp/constraints"
 )
+
+// To converts a slice of any type to a slice of another type.
+func To[V any, T any](s []V) []T {
+	result := make([]T, len(s))
+	for i, v := range s {
+		result[i], _ = convert[V, T](v)
+	}
+	return result
+}
+
+// ToE converts a slice of any type to a slice of another type with error handling.
+func ToE[V any, T any](s []V) ([]T, error) {
+	result := make([]T, len(s))
+	for i, v := range s {
+		val, err := convert[V, T](v)
+		if err != nil {
+			return nil, fmt.Errorf("failed to convert value at index %d: %w", i, err)
+		}
+		result[i] = val
+	}
+	return result, nil
+}
 
 // Count counts the number of elements in the collection.
 func Count[T comparable](collection []T) (count int) {
@@ -91,4 +116,37 @@ func Unique[T comparable](collection []T) []T {
 // Values creates an array of the map values.
 func Values[K comparable, V any](in map[K]V) []V {
 	return lo.Values(in)
+}
+
+// convert converts a value to another type.
+func convert[V any, T any](v V) (T, error) {
+	var result T
+	var err error
+	var converted any
+
+	switch any(result).(type) {
+	case int:
+		converted, err = cast.ToIntE(v)
+	case int64:
+		converted, err = cast.ToInt64E(v)
+	case uint:
+		converted, err = cast.ToUintE(v)
+	case uint64:
+		converted, err = cast.ToUint64E(v)
+	case float32:
+		converted, err = cast.ToFloat32E(v)
+	case float64:
+		converted, err = cast.ToFloat64E(v)
+	case string:
+		converted, err = cast.ToStringE(v)
+	case bool:
+		converted, err = cast.ToBoolE(v)
+	default:
+		return result, fmt.Errorf("unsupported type conversion to %T", result)
+	}
+
+	if err != nil {
+		return result, err
+	}
+	return converted.(T), nil
 }

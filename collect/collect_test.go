@@ -8,6 +8,163 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestTo(t *testing.T) {
+	t.Parallel()
+	tests := []struct {
+		name     string
+		input    any
+		expected any
+	}{
+		{
+			name:     "string slice to int slice",
+			input:    []string{"1", "2", "3"},
+			expected: []int{1, 2, 3},
+		},
+		{
+			name:     "int slice to string slice",
+			input:    []int{1, 2, 3},
+			expected: []string{"1", "2", "3"},
+		},
+		{
+			name:     "float64 slice to int slice",
+			input:    []float64{1.1, 2.2, 3.3},
+			expected: []int{1, 2, 3},
+		},
+		{
+			name:     "string slice to bool slice",
+			input:    []string{"true", "false", "1", "0"},
+			expected: []bool{true, false, true, false},
+		},
+		{
+			name:     "int slice to float64 slice",
+			input:    []int{1, 2, 3},
+			expected: []float64{1.0, 2.0, 3.0},
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			switch input := tt.input.(type) {
+			case []string:
+				switch expected := tt.expected.(type) {
+				case []int:
+					result := To[string, int](input)
+					assert.Equal(t, expected, result)
+				case []bool:
+					result := To[string, bool](input)
+					assert.Equal(t, expected, result)
+				}
+			case []int:
+				switch expected := tt.expected.(type) {
+				case []string:
+					result := To[int, string](input)
+					assert.Equal(t, expected, result)
+				case []float64:
+					result := To[int, float64](input)
+					assert.Equal(t, expected, result)
+				}
+			case []float64:
+				switch expected := tt.expected.(type) {
+				case []int:
+					result := To[float64, int](input)
+					assert.Equal(t, expected, result)
+				}
+			}
+		})
+	}
+}
+
+func TestToE(t *testing.T) {
+	t.Parallel()
+	tests := []struct {
+		name        string
+		input       any
+		expected    any
+		expectError bool
+		errorMsg    string
+	}{
+		{
+			name:        "valid string slice to int slice",
+			input:       []string{"1", "2", "3"},
+			expected:    []int{1, 2, 3},
+			expectError: false,
+		},
+		{
+			name:        "invalid string slice to int slice",
+			input:       []string{"1", "invalid", "3"},
+			expected:    []int(nil),
+			expectError: true,
+			errorMsg:    "failed to convert value at index 1:",
+		},
+		{
+			name:        "valid float64 slice to int slice",
+			input:       []float64{1.0, 2.0, 3.0},
+			expected:    []int{1, 2, 3},
+			expectError: false,
+		},
+		{
+			name:        "valid string slice to bool slice",
+			input:       []string{"true", "false", "1", "0"},
+			expected:    []bool{true, false, true, false},
+			expectError: false,
+		},
+		{
+			name:        "invalid string slice to bool slice",
+			input:       []string{"true", "invalid", "1"},
+			expected:    []bool(nil),
+			expectError: true,
+			errorMsg:    "failed to convert value at index 1:",
+		},
+		{
+			name:        "overflow test uint8 to int8",
+			input:       []uint8{200, 100, 50},
+			expected:    []int8(nil),
+			expectError: true,
+			errorMsg:    "failed to convert value at index 0:",
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			var result any
+			var err error
+
+			switch input := tt.input.(type) {
+			case []string:
+				switch tt.expected.(type) {
+				case []int:
+					result, err = ToE[string, int](input)
+				case []bool:
+					result, err = ToE[string, bool](input)
+				}
+			case []float64:
+				switch tt.expected.(type) {
+				case []int:
+					result, err = ToE[float64, int](input)
+				}
+			case []uint8:
+				switch tt.expected.(type) {
+				case []int8:
+					result, err = ToE[uint8, int8](input)
+				}
+			}
+
+			if tt.expectError {
+				assert.Error(t, err)
+				assert.Contains(t, err.Error(), tt.errorMsg)
+				assert.Nil(t, result)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, tt.expected, result)
+			}
+		})
+	}
+}
+
 func TestCount(t *testing.T) {
 	count := Count([]int{1, 5, 1})
 	assert.Equal(t, 3, count)
