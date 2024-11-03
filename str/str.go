@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/rand"
 	"encoding/json"
+	"log"
 	"path/filepath"
 	"regexp"
 	"strconv"
@@ -401,7 +402,7 @@ func (s *String) Lower() *String {
 	return s
 }
 
-// Ltrim returns the String instance with the leftmost occurrence of the given value removed.
+// LTrim returns the String instance with the leftmost occurrence of the given value removed.
 func (s *String) LTrim(characters ...string) *String {
 	if len(characters) == 0 {
 		s.value = strings.TrimLeft(s.value, " ")
@@ -954,7 +955,7 @@ func Random(length int) string {
 	b := make([]byte, length)
 	_, err := rand.Read(b)
 	if err != nil {
-		panic(err)
+		log.Panicf("failed to generate random string: %v", err)
 	}
 	letters := "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	for i, v := range b {
