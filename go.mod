@@ -7,7 +7,7 @@ require (
 	github.com/gabriel-vasile/mimetype v1.4.7
 	github.com/samber/lo v1.47.0
 	github.com/spf13/cast v1.7.0
-	github.com/stretchr/testify v1.9.0
+	github.com/stretchr/testify v1.10.0
 	golang.org/x/crypto v0.29.0
 	golang.org/x/exp v0.0.0-20240909161429-701f63a606c0
 )
