@@ -108,3 +108,59 @@ func TestPointer(t *testing.T) {
 	assert.Equal(t, &foo{Name: "foo"}, *Pointer(&foo{Name: "foo"}))
 	assert.Equal(t, time.Time{}, *Pointer(time.Time{}))
 }
+
+func Test_UnsafeString(t *testing.T) {
+	t.Parallel()
+	res := UnsafeString([]byte("Hello, World!"))
+	assert.Equal(t, "Hello, World!", res)
+}
+
+// go test -v -run=^$ -bench=UnsafeString -benchmem -count=2
+
+func Benchmark_UnsafeString(b *testing.B) {
+	hello := []byte("Hello, World!")
+	var res string
+	b.Run("unsafe", func(b *testing.B) {
+		for n := 0; n < b.N; n++ {
+			res = UnsafeString(hello)
+		}
+		assert.Equal(b, "Hello, World!", res)
+	})
+	b.Run("default", func(b *testing.B) {
+		for n := 0; n < b.N; n++ {
+			res = string(hello)
+		}
+		assert.Equal(b, "Hello, World!", res)
+	})
+}
+
+func Test_UnsafeBytes(t *testing.T) {
+	t.Parallel()
+	res := UnsafeBytes("Hello, World!")
+	assert.Equal(t, []byte("Hello, World!"), res)
+}
+
+// go test -v -run=^$ -bench=UnsafeBytes -benchmem -count=4
+
+func Benchmark_UnsafeBytes(b *testing.B) {
+	hello := "Hello, World!"
+	var res []byte
+	b.Run("unsafe", func(b *testing.B) {
+		for n := 0; n < b.N; n++ {
+			res = UnsafeBytes(hello)
+		}
+		assert.Equal(b, []byte("Hello, World!"), res)
+	})
+	b.Run("default", func(b *testing.B) {
+		for n := 0; n < b.N; n++ {
+			res = []byte(hello)
+		}
+		assert.Equal(b, []byte("Hello, World!"), res)
+	})
+}
+
+func Test_CopyString(t *testing.T) {
+	t.Parallel()
+	res := CopyString("Hello, World!")
+	assert.Equal(t, "Hello, World!", res)
+}

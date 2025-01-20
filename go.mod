@@ -3,6 +3,7 @@ module github.com/go-rat/utils
 go 1.23
 
 require (
+	github.com/cristalhq/jwt/v5 v5.4.0
 	github.com/davecgh/go-spew v1.1.1
 	github.com/gabriel-vasile/mimetype v1.4.8
 	github.com/samber/lo v1.47.0
