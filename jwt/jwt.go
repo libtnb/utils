@@ -9,6 +9,8 @@ import (
 	"github.com/go-rat/utils/uuid"
 )
 
+type Claims = jwt.RegisteredClaims
+
 type JWT struct {
 	key []byte
 	ttl time.Duration
@@ -21,7 +23,7 @@ func NewJWT(key string, ttl time.Duration) *JWT {
 	}
 }
 
-func (r *JWT) Generate(claims *jwt.RegisteredClaims) (string, error) {
+func (r *JWT) Generate(claims *Claims) (string, error) {
 	signer, err := jwt.NewSignerHS(jwt.HS256, r.key)
 	if err != nil {
 		return "", err
@@ -45,13 +47,13 @@ func (r *JWT) Generate(claims *jwt.RegisteredClaims) (string, error) {
 	return convert.UnsafeString(token.Bytes()), nil
 }
 
-func (r *JWT) Parse(token string) (*jwt.RegisteredClaims, error) {
+func (r *JWT) Parse(token string) (*Claims, error) {
 	verifier, err := jwt.NewVerifierHS(jwt.HS256, r.key)
 	if err != nil {
 		return nil, err
 	}
 
-	claims := new(jwt.RegisteredClaims)
+	claims := new(Claims)
 	if err = jwt.ParseClaims(convert.UnsafeBytes(token), verifier, claims); err != nil {
 		return nil, err
 	}

@@ -10,7 +10,7 @@ import (
 
 func TestGenerateValidToken(t *testing.T) {
 	j := NewJWT("secret", time.Hour)
-	claims := &jwt.RegisteredClaims{ID: "123", Subject: "test"}
+	claims := &Claims{ID: "123", Subject: "test"}
 	token, err := j.Generate(claims)
 	assert.NoError(t, err)
 	assert.NotEmpty(t, token)
@@ -18,14 +18,14 @@ func TestGenerateValidToken(t *testing.T) {
 
 func TestGenerateWithInvalidKey(t *testing.T) {
 	j := NewJWT("", time.Hour)
-	claims := &jwt.RegisteredClaims{ID: "123", Subject: "test"}
+	claims := &Claims{ID: "123", Subject: "test"}
 	_, err := j.Generate(claims)
 	assert.Error(t, err)
 }
 
 func TestParseValidToken(t *testing.T) {
 	j := NewJWT("secret", time.Hour)
-	claims := &jwt.RegisteredClaims{ID: "123", Subject: "test"}
+	claims := &Claims{ID: "123", Subject: "test"}
 	token, err := j.Generate(claims)
 	assert.NoError(t, err)
 
@@ -43,7 +43,7 @@ func TestParseInvalidToken(t *testing.T) {
 
 func TestParseWithInvalidKey(t *testing.T) {
 	j := NewJWT("secret", time.Hour)
-	claims := &jwt.RegisteredClaims{ID: "123", Subject: "test"}
+	claims := &Claims{ID: "123", Subject: "test"}
 	token, err := j.Generate(claims)
 	assert.NoError(t, err)
 
@@ -54,7 +54,7 @@ func TestParseWithInvalidKey(t *testing.T) {
 
 func TestNotBeforeSetWhenNil(t *testing.T) {
 	j := NewJWT("secret", time.Hour)
-	claims := &jwt.RegisteredClaims{ID: "123", Subject: "test"}
+	claims := &Claims{ID: "123", Subject: "test"}
 	token, err := j.Generate(claims)
 	assert.NoError(t, err)
 
@@ -66,7 +66,7 @@ func TestNotBeforeSetWhenNil(t *testing.T) {
 func TestNotBeforePreservedWhenSet(t *testing.T) {
 	j := NewJWT("secret", time.Hour)
 	notBefore := jwt.NewNumericDate(time.Now().Add(-time.Hour))
-	claims := &jwt.RegisteredClaims{ID: "123", Subject: "test", NotBefore: notBefore}
+	claims := &Claims{ID: "123", Subject: "test", NotBefore: notBefore}
 	token, err := j.Generate(claims)
 	assert.NoError(t, err)
 
