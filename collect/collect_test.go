@@ -265,6 +265,13 @@ func TestReverse(t *testing.T) {
 	assert.Equal(t, []string{"d", "c", "b", "a"}, reverseOrder2)
 }
 
+func TestShuffle(t *testing.T) {
+	shuffled1 := Shuffle([]int{0, 1, 2, 3, 4, 5})
+	shuffled2 := Shuffle([]string{"a", "b", "c", "d"})
+	assert.Len(t, shuffled1, 6)
+	assert.Len(t, shuffled2, 4)
+}
+
 func TestSplit(t *testing.T) {
 	result := Split([]int{0, 1, 2, 3, 4, 5}, 2)
 	result1 := Split([]int{0, 1, 2, 3, 4, 5, 6}, 2)
