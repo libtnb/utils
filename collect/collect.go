@@ -2,8 +2,8 @@ package collect
 
 import (
 	"fmt"
-	"github.com/samber/lo/mutable"
 
+	"github.com/samber/lo/mutable"
 	"github.com/samber/lo"
 	"github.com/spf13/cast"
 	"golang.org/x/exp/constraints"
