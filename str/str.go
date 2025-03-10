@@ -6,15 +6,13 @@ import (
 	"crypto/rand"
 	"crypto/sha256"
 	"encoding/hex"
+	"golang.org/x/crypto/sha3"
 	"math/big"
 	"net/url"
 	"regexp"
 	"strings"
 	"text/template"
 	"unicode"
-	"unicode/utf8"
-
-	"golang.org/x/crypto/sha3"
 
 	"github.com/go-rat/utils/convert"
 )
@@ -94,19 +92,27 @@ func IsURL(str string) bool {
 //	Cut("hello[world]", "[", "]") 返回 "world"
 //	Cut("hello[world", "[", "]") 返回 ""
 func Cut(str, begin, end string) string {
+	if str == "" || begin == "" || end == "" {
+		return ""
+	}
+
 	bIndex := strings.Index(str, begin)
-	eIndex := strings.Index(str, end)
-	if bIndex == -1 || eIndex == -1 || bIndex > eIndex {
+	if bIndex == -1 {
 		return ""
 	}
 
-	b := utf8.RuneCountInString(str[:bIndex]) + utf8.RuneCountInString(begin)
-	e := utf8.RuneCountInString(str[:eIndex])
-	if b > e {
+	afterBegin := bIndex + len(begin)
+	eIndex := strings.Index(str[afterBegin:], end)
+	if eIndex == -1 {
+		return ""
+	}
+	eIndex += afterBegin
+
+	if bIndex >= eIndex || afterBegin > eIndex {
 		return ""
 	}
 
-	return string([]rune(str)[b:e])
+	return str[afterBegin:eIndex]
 }
 
 // Substr 返回字符串的子串
