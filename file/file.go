@@ -10,6 +10,8 @@ import (
 	"time"
 
 	"github.com/gabriel-vasile/mimetype"
+
+	"github.com/go-rat/utils/convert"
 )
 
 func ClientOriginalExtension(file string) string {
@@ -22,7 +24,7 @@ func Contain(file string, search string) bool {
 		if err != nil {
 			return false
 		}
-		return strings.Contains(string(data), search)
+		return strings.Contains(convert.UnsafeString(data), search)
 	}
 
 	return false

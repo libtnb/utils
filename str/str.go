@@ -5,15 +5,18 @@ import (
 	"crypto/md5"
 	"crypto/rand"
 	"crypto/sha256"
-	"fmt"
+	"encoding/hex"
 	"math/big"
 	"net/url"
 	"regexp"
 	"strings"
 	"text/template"
 	"unicode"
+	"unicode/utf8"
 
 	"golang.org/x/crypto/sha3"
+
+	"github.com/go-rat/utils/convert"
 )
 
 const (
@@ -28,17 +31,26 @@ func Escape(str string) string {
 
 // MD5 生成字符串的 MD5 值
 func MD5(str string) string {
-	return fmt.Sprintf("%x", md5.Sum([]byte(str)))
+	sum := md5.Sum(convert.UnsafeBytes(str))
+	dst := make([]byte, hex.EncodedLen(len(sum)))
+	hex.Encode(dst, sum[:])
+	return convert.UnsafeString(dst)
 }
 
 // SHA256 生成字符串的 SHA256 值
 func SHA256(str string) string {
-	return fmt.Sprintf("%x", sha256.Sum256([]byte(str)))
+	sum := sha256.Sum256(convert.UnsafeBytes(str))
+	dst := make([]byte, hex.EncodedLen(len(sum)))
+	hex.Encode(dst, sum[:])
+	return convert.UnsafeString(dst)
 }
 
 // SHA3 生成字符串的 SHA3 值
 func SHA3(str string) string {
-	return fmt.Sprintf("%x", sha3.Sum256([]byte(str)))
+	sum := sha3.Sum256(convert.UnsafeBytes(str))
+	dst := make([]byte, hex.EncodedLen(len(sum)))
+	hex.Encode(dst, sum[:])
+	return convert.UnsafeString(dst)
 }
 
 // IsPhone 判断是否为手机号
@@ -82,27 +94,19 @@ func IsURL(str string) bool {
 //	Cut("hello[world]", "[", "]") 返回 "world"
 //	Cut("hello[world", "[", "]") 返回 ""
 func Cut(str, begin, end string) string {
-	if str == "" || begin == "" || end == "" {
-		return ""
-	}
-
 	bIndex := strings.Index(str, begin)
-	if bIndex == -1 {
+	eIndex := strings.Index(str, end)
+	if bIndex == -1 || eIndex == -1 || bIndex > eIndex {
 		return ""
 	}
 
-	afterBegin := bIndex + len(begin)
-	eIndex := strings.Index(str[afterBegin:], end)
-	if eIndex == -1 {
-		return ""
-	}
-	eIndex += afterBegin
-
-	if bIndex >= eIndex || afterBegin > eIndex {
+	b := utf8.RuneCountInString(str[:bIndex]) + utf8.RuneCountInString(begin)
+	e := utf8.RuneCountInString(str[:eIndex])
+	if b > e {
 		return ""
 	}
 
-	return str[afterBegin:eIndex]
+	return string([]rune(str)[b:e])
 }
 
 // Substr 返回字符串的子串
