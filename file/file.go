@@ -30,8 +30,11 @@ func Contain(file string, search string) bool {
 	return false
 }
 
-func Write(file string, content []byte) error {
-	if err := os.MkdirAll(filepath.Dir(file), os.ModePerm); err != nil {
+func Write(file string, content []byte, perm ...os.FileMode) error {
+	if len(perm) == 0 {
+		perm = append(perm, os.ModePerm)
+	}
+	if err := os.MkdirAll(filepath.Dir(file), perm[0]); err != nil {
 		return err
 	}
 
@@ -48,8 +51,11 @@ func Write(file string, content []byte) error {
 	return nil
 }
 
-func WriteString(file string, content string) error {
-	if err := os.MkdirAll(filepath.Dir(file), os.ModePerm); err != nil {
+func WriteString(file string, content string, perm ...os.FileMode) error {
+	if len(perm) == 0 {
+		perm = append(perm, os.ModePerm)
+	}
+	if err := os.MkdirAll(filepath.Dir(file), perm[0]); err != nil {
 		return err
 	}
 
