@@ -15,10 +15,11 @@ func TestContain(t *testing.T) {
 	assert.True(t, Contain("file.go", "package file"))
 }
 
-func TestCreateAndGetLineNum(t *testing.T) {
+func TestWriteAndGetLineNum(t *testing.T) {
 	pwd, _ := os.Getwd()
 	path := pwd + "/goravel/goravel.txt"
-	assert.Nil(t, Create(path, `goravel`))
+	assert.Nil(t, Write(path, []byte(`goravel`)))
+	assert.Nil(t, WriteString(path, `goravel`))
 
 	assert.Equal(t, 1, GetLineNum(path))
 	assert.True(t, Exists(path))
@@ -51,7 +52,7 @@ func TestMimeType(t *testing.T) {
 func TestRemove(t *testing.T) {
 	pwd, _ := os.Getwd()
 	path := pwd + "/goravel/goravel.txt"
-	assert.Nil(t, Create(path, `goravel`))
+	assert.Nil(t, WriteString(path, `goravel`))
 
 	assert.Nil(t, Remove(path))
 	assert.Nil(t, Remove(pwd+"/goravel"))
