@@ -38,7 +38,7 @@ func Write(file string, content []byte, perm ...os.FileMode) error {
 		return err
 	}
 
-	f, err := os.Create(file)
+	f, err := os.OpenFile(file, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, perm[0])
 	if err != nil {
 		return err
 	}
@@ -59,7 +59,7 @@ func WriteString(file string, content string, perm ...os.FileMode) error {
 		return err
 	}
 
-	f, err := os.Create(file)
+	f, err := os.OpenFile(file, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, perm[0])
 	if err != nil {
 		return err
 	}
