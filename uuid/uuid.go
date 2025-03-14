@@ -21,6 +21,7 @@ var (
 )
 
 // UUID generates an universally unique identifier (UUID)
+// WARNING: This implementation is not cryptographically secure and MUST NOT be used for key generation
 func UUID() string {
 	// Setup seed & counter once
 	uuidSetup.Do(func() {
