@@ -42,13 +42,12 @@ func Write(file string, content []byte, perm ...os.FileMode) error {
 	if err != nil {
 		return err
 	}
-	defer f.Close()
 
 	if _, err = f.Write(content); err != nil {
 		return err
 	}
 
-	return nil
+	return f.Close()
 }
 
 func WriteString(file string, content string, perm ...os.FileMode) error {
@@ -63,13 +62,12 @@ func WriteString(file string, content string, perm ...os.FileMode) error {
 	if err != nil {
 		return err
 	}
-	defer f.Close()
 
 	if _, err = f.WriteString(content); err != nil {
 		return err
 	}
 
-	return nil
+	return f.Close()
 }
 
 func Exists(file string) bool {
@@ -138,14 +136,13 @@ func Size(file string) (int64, error) {
 	if err != nil {
 		return 0, err
 	}
-	defer fileInfo.Close()
 
 	fi, err := fileInfo.Stat()
 	if err != nil {
 		return 0, err
 	}
 
-	return fi.Size(), nil
+	return fi.Size(), fileInfo.Close()
 }
 
 func GetLineNum(file string) int {
@@ -166,7 +163,9 @@ func GetLineNum(file string) int {
 		}
 	}
 
-	defer f.Close()
+	defer func(f *os.File) {
+		_ = f.Close()
+	}(f)
 
 	return total
 }

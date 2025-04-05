@@ -13,8 +13,12 @@ func redirectStdout(fn func()) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer os.Remove(f.Name())
-	defer f.Close()
+	defer func(name string) {
+		_ = os.Remove(name)
+	}(f.Name())
+	defer func(f *os.File) {
+		_ = f.Close()
+	}(f)
 
 	orig := os.Stdout
 	os.Stdout = f
