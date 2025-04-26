@@ -6,7 +6,7 @@ require (
 	github.com/cristalhq/jwt/v5 v5.4.0
 	github.com/davecgh/go-spew v1.1.1
 	github.com/gabriel-vasile/mimetype v1.4.9
-	github.com/samber/lo v1.49.1
+	github.com/samber/lo v1.50.0
 	github.com/spf13/cast v1.7.1
 	github.com/stretchr/testify v1.10.0
 	golang.org/x/crypto v0.37.0
