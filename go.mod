@@ -1,4 +1,4 @@
-module github.com/go-rat/utils
+module github.com/libtnb/utils
 
 go 1.24.0
 

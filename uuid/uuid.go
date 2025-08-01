@@ -7,7 +7,7 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"github.com/go-rat/utils/convert"
+	"github.com/libtnb/utils/convert"
 )
 
 // Copyright © 2014, Roger Peppe

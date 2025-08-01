@@ -3,7 +3,7 @@ package hash
 import (
 	"golang.org/x/crypto/bcrypt"
 
-	"github.com/go-rat/utils/convert"
+	"github.com/libtnb/utils/convert"
 )
 
 var (

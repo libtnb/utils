@@ -5,8 +5,8 @@ import (
 
 	"github.com/cristalhq/jwt/v5"
 
-	"github.com/go-rat/utils/convert"
-	"github.com/go-rat/utils/uuid"
+	"github.com/libtnb/utils/convert"
+	"github.com/libtnb/utils/uuid"
 )
 
 type Claims = jwt.RegisteredClaims
