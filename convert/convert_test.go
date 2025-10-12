@@ -109,58 +109,58 @@ func TestPointer(t *testing.T) {
 	assert.Equal(t, time.Time{}, *Pointer(time.Time{}))
 }
 
-func Test_UnsafeString(t *testing.T) {
+func TestUnsafeString(t *testing.T) {
 	t.Parallel()
 	res := UnsafeString([]byte("Hello, World!"))
 	assert.Equal(t, "Hello, World!", res)
 }
 
-// go test -v -run=^$ -bench=UnsafeString -benchmem -count=2
-
-func Benchmark_UnsafeString(b *testing.B) {
-	hello := []byte("Hello, World!")
-	var res string
-	b.Run("unsafe", func(b *testing.B) {
-		for n := 0; n < b.N; n++ {
-			res = UnsafeString(hello)
-		}
-		assert.Equal(b, "Hello, World!", res)
-	})
-	b.Run("default", func(b *testing.B) {
-		for n := 0; n < b.N; n++ {
-			res = string(hello)
-		}
-		assert.Equal(b, "Hello, World!", res)
-	})
-}
-
-func Test_UnsafeBytes(t *testing.T) {
+func TestUnsafeBytes(t *testing.T) {
 	t.Parallel()
 	res := UnsafeBytes("Hello, World!")
 	assert.Equal(t, []byte("Hello, World!"), res)
 }
 
-// go test -v -run=^$ -bench=UnsafeBytes -benchmem -count=4
-
-func Benchmark_UnsafeBytes(b *testing.B) {
-	hello := "Hello, World!"
-	var res []byte
-	b.Run("unsafe", func(b *testing.B) {
-		for n := 0; n < b.N; n++ {
-			res = UnsafeBytes(hello)
-		}
-		assert.Equal(b, []byte("Hello, World!"), res)
-	})
-	b.Run("default", func(b *testing.B) {
-		for n := 0; n < b.N; n++ {
-			res = []byte(hello)
-		}
-		assert.Equal(b, []byte("Hello, World!"), res)
-	})
-}
-
-func Test_CopyString(t *testing.T) {
+func TestCopyString(t *testing.T) {
 	t.Parallel()
 	res := CopyString("Hello, World!")
 	assert.Equal(t, "Hello, World!", res)
+}
+
+func TestCopyBytes(t *testing.T) {
+	t.Run("empty slice", func(t *testing.T) {
+		input := []byte{}
+		copied := CopyBytes(input)
+		assert.Equal(t, input, copied)
+	})
+
+	t.Run("single element", func(t *testing.T) {
+		input := []byte{42}
+		copied := CopyBytes(input)
+		assert.Equal(t, input, copied)
+		input[0] = 0 // Modify the input to ensure the copied slice does not change
+		assert.NotEqual(t, input[0], copied[0])
+	})
+
+	t.Run("multiple elements", func(t *testing.T) {
+		input := []byte{1, 2, 3, 4, 5}
+		copied := CopyBytes(input)
+		assert.Equal(t, input, copied)
+		input[0] = 0 // Modify the input to ensure the copied slice does not change
+		assert.NotEqual(t, input, copied)
+	})
+
+	t.Run("deep copy validation", func(t *testing.T) {
+		input := []byte{1, 2, 3, 4, 5}
+		copied := CopyBytes(input)
+		input[0] = 0 // Modify the input to ensure the copied slice does not change
+		assert.NotEqual(t, input[0], copied[0])
+	})
+
+	t.Run("nil slice", func(t *testing.T) {
+		copied := CopyBytes(nil)
+		assert.NotNil(t, copied)
+		assert.Empty(t, copied)
+		assert.Equal(t, 0, cap(copied))
+	})
 }
