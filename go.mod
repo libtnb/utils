@@ -1,6 +1,6 @@
 module github.com/libtnb/utils
 
-go 1.24.0
+go 1.25.0
 
 require (
 	github.com/cristalhq/jwt/v5 v5.4.0
@@ -10,7 +10,7 @@ require (
 	github.com/spf13/cast v1.10.0
 	github.com/stretchr/testify v1.11.1
 	golang.org/x/crypto v0.48.0
-	golang.org/x/exp v0.0.0-20260209203927-2842357ff358
+	golang.org/x/exp v0.0.0-20260211191109-2735e65f0518
 )
 
 require (
