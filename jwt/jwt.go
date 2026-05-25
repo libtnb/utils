@@ -1,6 +1,7 @@
 package jwt
 
 import (
+	"errors"
 	"time"
 
 	"github.com/cristalhq/jwt/v5"
@@ -15,6 +16,8 @@ type JWT struct {
 	key []byte
 	ttl time.Duration
 }
+
+var ErrInvalidClaims = errors.New("invalid claims")
 
 func NewJWT(key string, ttl time.Duration) *JWT {
 	return &JWT{
@@ -56,6 +59,9 @@ func (r *JWT) Parse(token string) (*Claims, error) {
 	claims := new(Claims)
 	if err = jwt.ParseClaims(convert.UnsafeBytes(token), verifier, claims); err != nil {
 		return nil, err
+	}
+	if !claims.IsValidAt(time.Now()) {
+		return nil, ErrInvalidClaims
 	}
 
 	return claims, nil

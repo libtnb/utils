@@ -74,3 +74,27 @@ func TestNotBeforePreservedWhenSet(t *testing.T) {
 	assert.NoError(t, err)
 	assert.WithinDuration(t, notBefore.Time, parsedClaims.NotBefore.Time, time.Second)
 }
+
+func TestParseExpiredToken(t *testing.T) {
+	j := NewJWT("secret", -time.Hour)
+	claims := &Claims{ID: "123", Subject: "test"}
+	token, err := j.Generate(claims)
+	assert.NoError(t, err)
+
+	_, err = j.Parse(token)
+	assert.ErrorIs(t, err, ErrInvalidClaims)
+}
+
+func TestParseTokenBeforeNotBefore(t *testing.T) {
+	j := NewJWT("secret", time.Hour)
+	claims := &Claims{
+		ID:        "123",
+		Subject:   "test",
+		NotBefore: jwt.NewNumericDate(time.Now().Add(time.Hour)),
+	}
+	token, err := j.Generate(claims)
+	assert.NoError(t, err)
+
+	_, err = j.Parse(token)
+	assert.ErrorIs(t, err, ErrInvalidClaims)
+}
