@@ -10,7 +10,7 @@ require (
 	github.com/spf13/cast v1.10.0
 	github.com/stretchr/testify v1.12.1
 	golang.org/x/crypto v0.57.0
-	golang.org/x/exp v0.0.0-20260908205506-85c1c2202aba
+	golang.org/x/exp v0.0.0-20261007192929-f45ad48fbe92
 )
 
 require (
