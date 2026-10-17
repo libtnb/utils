@@ -4,7 +4,7 @@ go 1.26.0
 
 require (
 	github.com/cristalhq/jwt/v5 v5.4.0
-	github.com/gabriel-vasile/mimetype v1.4.15
+	github.com/gabriel-vasile/mimetype v1.4.16
 	github.com/goforj/godump v1.10.0
 	github.com/samber/lo v1.53.0
 	github.com/spf13/cast v1.10.0
